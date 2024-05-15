@@ -1,4 +1,4 @@
-//Pokemon Application 
+# Pokemon Application 
 
 Minna Nordlund FEND23
 Inlämning för Javascript 2
