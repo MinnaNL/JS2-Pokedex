@@ -1,88 +1,239 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<!--Meta Tags-->
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<!--Title-->
-		<title>Pokéminna</title>
-		<!--Favicon-->
-		<link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
-		<!--Fonts (Google Fonts)-->
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Rammetto+One&family=VT323&display=swap"
-			rel="stylesheet"
-		/>
-		<!--External Libraries (Bootstrap)-->
-		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-			crossorigin="anonymous"
-		/>
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-			crossorigin="anonymous"
-		></script>
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-			integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-			crossorigin="anonymous"
-		></script>
-		<!--Javascript-->
-		<script src="index.js" defer></script>
-		<!--CSS-->
-		<link rel="stylesheet" href="style.css" />
-	</head>
-	<body>
-		<main class="container w-75">
-			<!-- Header -->
-			<header class="p-1 d-flex justify-content-center">
-				<div class="flex-column text-center">
-					<h1 class="pt-4">Pokémon</h1>
-					<p>Who will you choose?</p>
-				</div>
-			</header>
-			<!-- Pokemon Arena for Comparison -->
-			<div class="pokemonArena d-flex justify-content-center p-2">
-				<!-- Pokemon 1 Details -->
-				<div class="d-flex flex-column px-4">
-					<div class="p-2 mr-2">
-						<select id="pokeDropdown1" class="p-2 mx-4">
-							<option selected disabled hidden value="">Choose pokémon</option>
-						</select>
-					</div>
-					<div class="pokemon1Score" id="pokemon1Details">
-						<!--Pokemon 1 info will be shown here-->
-					</div>
-				</div>
-				<!-- Pokemon 2 Details -->
-				<div class="d-flex flex-column px-4">
-					<div class="p-2">
-						<select id="pokeDropdown2" class="p-2 mx-4">
-							<option selected disabled hidden value="">Choose pokémon</option>
-						</select>
-					</div>
-					<div class="pokemon2Score" id="pokemon2Details">
-						<!--Pokemon 2 info will be shown here-->
-					</div>
-				</div>
-				<!-- Compare Button -->
-				<div class="justify-content-center">
-					<div class="px-4">
-						<button class="compareButton p-2 text-uppercase">Compare</button>
-					</div>
-					<!-- Winner -->
-					<div class="col-12 text-center">
-						<div class="winner text-wrap">
-							<!-- Winner result will be displayed here -->
-						</div>
-					</div>
-				</div>
-			</div>
-		</main>
-	</body>
-</html>
+//JS for Pokemon by Minna Nordlund
+//Defined
+const pokeDropdown1 = document.querySelector("#pokeDropdown1");
+const pokeDropdown2 = document.querySelector("#pokeDropdown2");
+const pokeSelect = document.querySelectorAll("select");
+const pokemon1 = document.querySelector(".pokemon1Score");
+const pokemon2 = document.querySelector(".pokemon2Score");
+const compareButton = document.querySelector(".compareButton");
+
+// Pokemon constructor
+class Pokemon {
+	constructor(imageUrl, name, type, weight, height, stats) {
+		this.name = name;
+		this.imageUrl = imageUrl;
+		this.type = type;
+		this.weight = weight;
+		this.height = height;
+		this.stats = stats;
+	}
+}
+
+// Show pokemon info
+const displayPokemon = (pokemon, pokemonArena) => {
+	pokemonArena.dataset.pokemon = JSON.stringify(pokemon); // Set the data-pokemon attribute
+	pokemonArena.innerHTML = `
+    <div class="pokeBox p-1">
+        <div class="pokeImg">
+            <img src="${pokemon.imageUrl}" alt="${pokemon.name}" class="w-100"/>
+        </div>
+            <!--Pokemon details-->
+            <div>
+                <div class="pokemonDetails">
+                    <h2 class=" text-uppercase">${pokemon.name}</h2>
+                        <p>Type: ${pokemon.type.join(", ")}</p>
+                        <p>Weight: ${pokemon.weight} kg</p>
+                        <p>Height: ${pokemon.height} m</p>
+                </div>
+            <!--Pokemon Stats-->
+        <div class="pokeStats">
+                <h2 class="text-uppercase">Stats:</h2>
+                    <ul class="statsClass list-unstyled">
+                        <li>HP: ${pokemon.stats.hp}</li>
+                        <li>Attack: ${pokemon.stats.attack}</li>
+                        <li>Special attack: ${pokemon.stats["special-attack"]}</li>
+                        <li>Defense: ${pokemon.stats.defense}</li>
+                        <li>Special defense: ${pokemon.stats["special-defense"]}</li>
+                        <li>Speed: ${pokemon.stats.speed}</li>
+                    </ul>
+            </div>
+         </div>
+    </div>
+    `;
+};
+
+// Fetches pokemon data from API
+let getPokeData = async (pokemonName) => {
+	try {
+		let response = await fetch(
+			`https://pokeapi.co/api/v2/pokemon/${pokemonName}`
+		);
+		if (!response.ok) {
+			throw new Error("Failed to fetch Pokémon data");
+		}
+		let data = await response.json();
+		console.log(data);
+		let stats = {};
+		data.stats.forEach((stat) => {
+			stats[stat.stat.name] = stat.base_stat;
+		});
+		return new Pokemon(
+			data.sprites.front_default,
+			data.name,
+			data.types.map((type) => type.type.name),
+			data.weight,
+			data.height,
+			stats,
+			data.stats[0].base_stat
+		);
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+// Pokeselect
+pokeSelect.forEach((dropdown) => {
+	dropdown.addEventListener("change", async () => {
+		const winnerpokemonArena = document.querySelector(".winner");
+		winnerpokemonArena.innerHTML = "";
+		let selectedPokemon = dropdown.value;
+		if (!selectedPokemon) return;
+		let pokemonData = await getPokeData(selectedPokemon);
+
+		displayPokemon(pokemonData, dropdown.parentElement.nextElementSibling);
+	});
+});
+
+// Add pokemons to dropdown
+let fillDropdown = async (dropdown) => {
+	let url = "https://pokeapi.co/api/v2/pokemon?limit=151";
+	let response = await fetch(url);
+	let { results } = await response.json();
+	results.forEach((pokemon) => {
+		let option = document.createElement("option");
+		option.value = pokemon.name;
+		option.text = pokemon.name;
+		dropdown.appendChild(option);
+	});
+	//   console.log(pokeDropdown1);
+};
+
+// Function for comparing the pokemons stats
+let comparePokemon = (pokemon1, pokemon2) => {
+	const Traits1 = Object.values(pokemon1.stats);
+	const Traits2 = Object.values(pokemon2.stats);
+
+	let winner = null;
+
+	Traits1.forEach((statValue1, index) => {
+		const statValue2 = Traits2[index];
+
+		let statElement1 = document.querySelector(
+			`.pokemon1Score .pokeStats ul li:nth-child(${index + 1})`
+		);
+		let statElement2 = document.querySelector(
+			`.pokemon2Score .pokeStats ul li:nth-child(${index + 1})`
+		);
+
+		compareTraits(statValue1, statValue2, statElement1, statElement2);
+	});
+
+	// Height and Weight comparison
+	let height1 = document.querySelector(
+		".pokemon1Score .pokemonDetails p:nth-child(4)"
+	);
+	let height2 = document.querySelector(
+		".pokemon2Score .pokemonDetails p:nth-child(4)"
+	);
+	compareTraits(pokemon1.height, pokemon2.height, height1, height2);
+
+	let weight1 = document.querySelector(
+		".pokemon1Score .pokemonDetails p:nth-child(3)"
+	);
+	let weight2 = document.querySelector(
+		".pokemon2Score .pokemonDetails p:nth-child(3)"
+	);
+	compareTraits(pokemon1.weight, pokemon2.weight, weight1, weight2);
+
+	const pokemon1Total = Traits1.reduce((acc, val) => acc + val, 0);
+	const pokemon2Total = Traits2.reduce((acc, val) => acc + val, 0);
+
+	if (pokemon1Total > pokemon2Total) {
+		winner = pokemon1;
+	} else if (pokemon1Total < pokemon2Total) {
+		winner = pokemon2;
+	}
+
+	const winnerpokemonArena = document.querySelector(".winner");
+	winnerpokemonArena.innerHTML = "";
+
+	if (winner) {
+		showWinner(winner, winnerpokemonArena);
+	} else {
+		winnerpokemonArena.textContent = "They are equals!";
+	}
+};
+
+// EventListnerer for compareButton
+compareButton.addEventListener("click", async () => {
+	// Get pokemon data
+	let pokedex1 = document.querySelector("#pokemon1Details").dataset.pokemon;
+	let pokedex2 = document.querySelector("#pokemon2Details").dataset.pokemon;
+
+	if (!pokedex1 || !pokedex2) {
+		alert("Choose two pokemons");
+		return;
+	}
+
+	// Parse pokemon data from dataset
+	let pokemon1 = JSON.parse(pokedex1);
+	let pokemon2 = JSON.parse(pokedex2);
+
+	if (pokemon1.name === pokemon2.name) {
+		alert("A pokemon can not be compared to itself!");
+		return;
+	}
+
+	// Compare and update
+	comparePokemon(pokemon1, pokemon2);
+});
+
+// Fill dropdowns with pokemon
+fillDropdown(pokeDropdown1);
+fillDropdown(pokeDropdown2);
+
+const compareTraits = (value1, value2, element1, element2) => {
+	if (value1 > value2) {
+		element1.style.color = "#37BF8E"; // Secondary Green
+		element2.style.color = "#eb4055"; // Secondary Red
+	} else if (value1 < value2) {
+		element1.style.color = "#37BF8E"; // Secondary Green
+		element2.style.color = "#eb4055"; // Secondary Red
+	} else {
+		element1.style.color = "#ec8a49"; // Primary Orange
+		element2.style.color = "#ec8a49"; // Primary Orange
+	}
+};
+
+const typeColors = {
+	normal: "#A8A878",
+	fire: "#F08030",
+	water: "#6890F0",
+	electric: "#F8D030",
+	grass: "#78C850",
+	ice: "#98D8D8",
+	fighting: "#C03028",
+	poison: "#A040A0",
+	ground: "#E0C068",
+	flying: "#A890F0",
+	psychic: "#F85888",
+	bug: "#A8B820",
+	rock: "#B8A038",
+	ghost: "#705898",
+	dragon: "#7038F8",
+	dark: "#705848",
+	steel: "#B8B8D0",
+	dark: "#EE99AC",
+};
+
+//Show the winner
+const showWinner = (winner, pokemonArena) => {
+	pokemonArena.innerHTML = "";
+
+	const winnerText = `The winner is ${winner.name}!`;
+
+	const winnerInfo = document.createElement("div");
+	winnerInfo.classList.add("winner-info");
+	winnerInfo.textContent = winnerText;
+	pokemonArena.appendChild(winnerInfo);
+};
