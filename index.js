@@ -24,8 +24,8 @@ const displayPokemon = (pokemon, pokemonArena) => {
 	pokemonArena.dataset.pokemon = JSON.stringify(pokemon); // Set the data-pokemon attribute
 	pokemonArena.innerHTML = `
     <div class="pokeBox p-1">
-        <div class="pokeImg">
-            <img src="${pokemon.imageUrl}" alt="${pokemon.name}" class="h-75 d-flex justify-content-center px-1 py-0"/>
+        <div class="pokeImg d-flex justify-content-center align-items-center">
+            <img src="${pokemon.imageUrl}" alt="${pokemon.name}" img class="h-75 px-1 py-0"/>
         </div>
             <!--Pokemon details-->
             <div>
