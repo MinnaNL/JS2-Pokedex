@@ -5,7 +5,7 @@ body {
   box-sizing: border-box;
   font-family: "VT323", monospace;
   background: #1e7170;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 h1 {
@@ -13,6 +13,10 @@ h1 {
   font-size: 3rem;
   color: #F9D543;
   text-shadow: 1px 1px 0 #1d1d1d, -1px 1px 1px #1d1d1d, 1px -1px 1px #1d1d1d, -1px -1px 1px #1d1d1d, 0px 1px 1px #1d1d1d, 0px -1px 1px #1d1d1d, -1px 0px 1px #1d1d1d, 1px 0px 1px #1d1d1d, 2px 2px 1px #1d1d1d, -2px 2px 1px #1d1d1d, 2px -2px 1px #1d1d1d, -2px -2px 1px #1d1d1d, 0px 2px 1px #1d1d1d, 0px -2px 1px #1d1d1d, -2px 0px 1px #1d1d1d, 2px 0px 1px #1d1d1d, 1px 2px 1px #1d1d1d, -1px 2px 1px #1d1d1d, 1px -2px 1px #1d1d1d, -1px -2px 1px #1d1d1d, 2px 1px 1px #1d1d1d, -2px 1px 1px #1d1d1d, 2px -1px 1px #1d1d1d, -2px -1px 1px #1d1d1d;
+}
+
+h2 {
+  font-size: 1.25rem;
 }
 
 header p {

@@ -11,7 +11,7 @@ body {
 	box-sizing: border-box;
 	font-family: "VT323", monospace;
 	background: $primary-green;
-	font-size: 20px;
+	font-size: 18px;
 }
 //h1
 h1 {
@@ -29,6 +29,9 @@ h1 {
 		2px -1px 1px $text-black, -2px -1px 1px $text-black;
 }
 
+h2{
+    font-size: 1.25rem;
+}
 header {
 	p {
 		text-transform: uppercase;
