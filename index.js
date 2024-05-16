@@ -25,7 +25,7 @@ const displayPokemon = (pokemon, pokemonArena) => {
 	pokemonArena.innerHTML = `
     <div class="pokeBox p-1">
         <div class="pokeImg">
-            <img src="${pokemon.imageUrl}" alt="${pokemon.name}" class="w-100"/>
+            <img src="${pokemon.imageUrl}" alt="${pokemon.name}" class="h-75 d-flex justify-content-center px-1 py-0"/>
         </div>
             <!--Pokemon details-->
             <div>
@@ -68,7 +68,7 @@ let getPokeData = async (pokemonName) => {
 			stats[stat.stat.name] = stat.base_stat;
 		});
 		return new Pokemon(
-			data.sprites.front_default,
+			data.sprites.other.dream_world.front_default,
 			data.name,
 			data.types.map((type) => type.type.name),
 			data.weight,
@@ -105,7 +105,6 @@ let fillDropdown = async (dropdown) => {
 		option.text = pokemon.name;
 		dropdown.appendChild(option);
 	});
-	//   console.log(pokeDropdown1);
 };
 
 // Function for comparing the pokemons stats
@@ -205,26 +204,26 @@ const compareTraits = (value1, value2, element1, element2) => {
 	}
 };
 
-const typeColors = {
-	normal: "#A8A878",
-	fire: "#F08030",
-	water: "#6890F0",
-	electric: "#F8D030",
-	grass: "#78C850",
-	ice: "#98D8D8",
-	fighting: "#C03028",
-	poison: "#A040A0",
-	ground: "#E0C068",
-	flying: "#A890F0",
-	psychic: "#F85888",
-	bug: "#A8B820",
-	rock: "#B8A038",
-	ghost: "#705898",
-	dragon: "#7038F8",
-	dark: "#705848",
-	steel: "#B8B8D0",
-	dark: "#EE99AC",
-};
+// const typeColors = {
+// 	normal: "#A8A878",
+// 	fire: "#F08030",
+// 	water: "#6890F0",
+// 	electric: "#F8D030",
+// 	grass: "#78C850",
+// 	ice: "#98D8D8",
+// 	fighting: "#C03028",
+// 	poison: "#A040A0",
+// 	ground: "#E0C068",
+// 	flying: "#A890F0",
+// 	psychic: "#F85888",
+// 	bug: "#A8B820",
+// 	rock: "#B8A038",
+// 	ghost: "#705898",
+// 	dragon: "#7038F8",
+// 	dark: "#705848",
+// 	steel: "#B8B8D0",
+// 	dark: "#EE99AC",
+// };
 
 //Show the winner
 const showWinner = (winner, pokemonArena) => {
