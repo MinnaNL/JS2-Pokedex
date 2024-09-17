@@ -1,7 +1,8 @@
 # Pokemon Application 
 
-Using API for pokedex and designing and developing pokedex app
+Using API, designing and developing pokedex app.
 Javascript 2
+https://htmlpreview.github.io/?https://github.com/MinnaNL/JS2-Pokedex/blob/main/index.html
 
 <img width="882" alt="Screenshot 2024-09-17 at 10 33 41" src="https://github.com/user-attachments/assets/745cad76-407f-4824-b208-29391452a3ee">
 
